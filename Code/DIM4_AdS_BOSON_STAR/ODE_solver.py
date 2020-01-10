@@ -3,7 +3,7 @@ import scipy.integrate as spi
 import scipy.optimize as opi
 import matplotlib 
 matplotlib.use("agg")
-
+import os 
 import matplotlib.pyplot as plt
 
 def eqns(y, r):
@@ -20,18 +20,19 @@ def eqns(y, r):
     D = 5.0 
     Lambda = -0.1
     edelta, m, phi, pi = y
+    # Where edelta  = e^{-\delta}
 
     F  = ( 1 - 2*m /r**( D-3 ) - 2 * Lambda * r**2 / (( D - 2 )*( D - 1 )) )
    
+   
 
-    dedeltadr = r*(1.0/edelta*pi**2.0 + edelta*phi**2/F**2)
-    dmdr      = r**( D - 2 ) * 0.5 * ( F * pi**2 + phi**2 + edelta**2 * phi**2/F) 
+    dedeltadr = r*(edelta*pi**2.0 + edelta**(-1) *phi**2/F**2)
+    dmdr      = r**( D - 2 ) * 0.5 * ( F * pi**2 + phi**2 + edelta**(-2) * phi**2 / F) 
     dphidr    = pi 
     
-    dFdr  =   (-4*Lambda*r)/((-2 + D)*(-1 + D)) - 2*(3 - D)*r**(2 - D)*m - 2*r**(3 - D)*dmdr
+    dFdr      =  (-4*Lambda*r)/((-2 + D)*(-1 + D)) - 2*(3 - D)*r**(2 - D)*m - 2*r**(3 - D)*dmdr
 
-    dpidr     =  1.0/(r**(D-2)*edelta**(-1)*F ) * (r ** (D-2) * edelta**(-1) * phi * ( 1.0 - edelta**2/F) - (D-2) * r**(D-1)*edelta**(-1)*F*pi - r**( D - 2)*(-1)*edelta**(-2)*F*pi -  r**(D-2)*edelta**(-1)*dFdr*pi)
-
+    dpidr     =  -(phi/(edelta**2*F**2)) + phi/F - (dedeltadr*pi)/edelta - (dFdr*pi)/F + (2*pi)/r - (D*pi)/r
     dydr = [dedeltadr,dmdr,dphidr,dpidr]
     return dydr
 
@@ -50,7 +51,7 @@ def shoot(alpha0_guess,phi0,r):
     """
     
     # Define initial data vector 
-    y0 = [1, alpha0_guess,phi0,0]
+    y0 = [alpha0_guess,0,phi0,0]
     # Solve differential equaion 
     sol = spi.odeint(eqns, y0, r)
     phi_end = sol[-1,2]	
@@ -72,7 +73,7 @@ def radial_walker(alpha0_guess,phi0,rstart,rend,deltaR,N):
         alpha0 (real):. alpha0 for rmax   
     """
 
-    eps = 1e-4 # distance from zero
+    eps = 1e-10 # distance from zero
     range_list = np.arange(rstart,rend,deltaR)
     alpha0 = alpha0_guess
 
@@ -94,27 +95,33 @@ def radial_walker(alpha0_guess,phi0,rstart,rend,deltaR,N):
 
 phi0 = 0.1
 # Resolution of diff eqn 
-Rstart = 2
-Rend = 3
-deltaR = 0.1
+Rstart = 6
+Rend = 30.00
+deltaR = 0.5
 N = 100000
 
-alpha0 = radial_walker(0.999,phi0,Rstart,Rend,deltaR,N)
+alpha0 = radial_walker(1,phi0,Rstart,Rend,deltaR,N)
 
-# Root finding ( values for which 
+name = "phi"+str(phi0)
+if not os.path.exists(name):
+    os.mkdir(name)
+
 
 r = np.linspace(1e-10, Rend, N)
-y0 = [1, alpha0 ,phi0,0]
+y0 = [ alpha0, 0 ,phi0,0]
 sol = spi.odeint(eqns, y0, r)
 
-
-plt.plot(r, sol[:, 0], 'b', label='a(t)')
-plt.plot(r, sol[:, 1], 'g', label='alpha(t)')
-plt.plot(r, sol[:, 2]+1, 'r', label='phi(t)')
+plt.plot(r, 1/sol[:, 0], 'b', label='edelta(t)')
+plt.plot(r, 1+sol[:, 1], 'g', label='1+m(t)')
+plt.plot(r, 1+sol[:, 2], 'r', label='1+phi(t)')
 plt.legend(loc='best')
 plt.xlabel('t')
-plt.ylim([0.5,1.5])
+plt.ylim([0.99,max(1+sol[:,2])*1.5])
 plt.grid()
 
+plt.savefig(name+"/overview.png")
 
-plt.savefig("test.png")
+np.savetxt(name+"/edelta.dat",1/sol[:, 0]),
+np.savetxt(name+"/m.dat",sol[:, 1]),
+np.savetxt(name+"/phi.dat",sol[:, 2]),
+
