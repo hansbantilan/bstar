@@ -72,7 +72,6 @@ def radial_walker(alpha0_guess,phi0,rstart,rend,deltaR,N):
     Returns:
         alpha0 (real):. alpha0 for rmax   
     """
-
     eps = 1e-10 # distance from zero
     range_list = np.arange(rstart,rend,deltaR)
     alpha0 = alpha0_guess
@@ -93,14 +92,16 @@ def radial_walker(alpha0_guess,phi0,rstart,rend,deltaR,N):
 # spaced times between t=0 and t=3.
 
 
-phi0 = 0.1
+phi0 = 0.04
 # Resolution of diff eqn 
-Rstart = 6
-Rend = 30.00
-deltaR = 0.5
+Rstart = 15
+Rend = 50.00
+deltaR = 1
 N = 100000
+alpha0_guess = 0.75
 
-alpha0 = radial_walker(1,phi0,Rstart,Rend,deltaR,N)
+
+alpha0 = radial_walker(alpha0_guess,phi0,Rstart,Rend,deltaR,N)
 
 name = "phi"+str(phi0)
 if not os.path.exists(name):
@@ -116,7 +117,7 @@ plt.plot(r, 1+sol[:, 1], 'g', label='1+m(t)')
 plt.plot(r, 1+sol[:, 2], 'r', label='1+phi(t)')
 plt.legend(loc='best')
 plt.xlabel('t')
-plt.ylim([0.99,max(1+sol[:,2])*1.5])
+plt.ylim([0.99,max(1+sol[:,2])*1.2])
 plt.grid()
 
 plt.savefig(name+"/overview.png")
