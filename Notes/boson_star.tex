@@ -1,0 +1,82 @@
+\documentclass[prl,twocolumn,superscriptaddress]{revtex4-1}
+\pdfoutput=1
+\usepackage[letterpaper,top=1.45cm,bottom=1.65cm,left=2cm,right=2cm]{geometry}
+\usepackage{amssymb,amsmath,amsthm,graphicx}
+\usepackage{subfigure}
+\usepackage{graphics, color}
+\usepackage{latexsym}
+\usepackage{bm}
+\usepackage{epsfig}
+\usepackage{multirow,tabularx}
+\usepackage[colorlinks=true,linktocpage=true,linkcolor=blue,citecolor=blue]{hyperref}
+\usepackage[abs]{overpic}
+
+\usepackage{fancyhdr}
+\fancyhf{}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\pagestyle{fancy}
+\fancypagestyle{plain}
+
+\setlength{\parskip}{0cm}
+
+\newcommand{\PRLsection}[1]{\emph{#1.---}}
+
+\newcommand{\ToDo}[1]{\textbf{\textsf !#1!}}
+\newcommand{\TF}{\mathrm{TF}}  %TF
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{example}[theorem]{Example}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{unusedproblem}[theorem]{unused Problem}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{project}[theorem]{Project}
+\newtheorem{problem}[theorem]{Problem}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{remark}[theorem]{Remark}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Document
+%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\title{Boson stars as holographic heavy ions}
+
+\author{}
+
+\maketitle
+
+%-------------------------------------------------------
+% Preliminaries
+%-------------------------------------------------------
+\PRLsection{Preliminaries}
+Near the AdS boundary $r\rightarrow\infty$, a complex scalar $\varphi$ with potential $V(\varphi)=\mu^2 |\varphi|^2 /2$ takes on the asymptotic form\cite{Henneaux:2006hk,Marolf:2006nd}
+\begin{equation}
+\varphi \rightarrow \frac{A}{r^{\lambda_-}} + \frac{B}{r^{\lambda_+}},
+\end{equation}
+where 
+\begin{equation}
+\lambda_{\pm} = \frac{D-1}{2}+\sqrt{\left( \frac{D-1}{2} \right)^2 + \mu^2 L^2},
+\end{equation}
+and the AdS curvature length scale is $L$. 
+To reproduce the asymptotics shown in (26) of~\cite{Astefanesei:2003qy}, which takes the form $\varphi \sim \hat{\varphi}_0 r^c$ for the power $c=-\left[ \frac{D-1}{2} + \sqrt{\left( \frac{D-1}{2} \right)^2 - \frac{(D-1)(D-2)}{2\Lambda}} \right]$, first note the rescaling $\Lambda \rightarrow \Lambda/\mu^2$ used in that work, and remember the relation between the AdS length scale $L$ and the cosmological constant $\Lambda=-\frac{(D-1)(D-2)}{2 L^2}$.
+The rescaling then gives the expected $c\rightarrow -\lambda_+$.
+
+The important take-away message: all numerical values of the cosmological constant quoted in~\cite{Astefanesei:2003qy} are in fact $\nu\equiv\Lambda/\mu^2$. 
+We are free to fix the AdS length scale to be $L=1$, which is the scale with respect to which all other lengths are measured. 
+All numerical values of $\nu\equiv\Lambda/\mu^2$ then implies a mass parameter value $\mu^2=-(D-1)(D-2)/(2\nu)$ e.g. $\nu=-0.1$ in $D=5$ gives $\mu^2=60$.
+
+%-------------------------------------------------------
+% Bibliography
+%-------------------------------------------------------
+\bibliography{boson_star}
+\bibliographystyle{apsrev4-1}
+
+\end{document}
