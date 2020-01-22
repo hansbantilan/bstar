@@ -76,9 +76,9 @@ All numerical values of $\nu\equiv\Lambda/\mu^2$ then implies a mass parameter v
 \PRLsection{Transformation to Cartesian Coordinates}
 The metric of global AdS$_5$ is
 \begin{eqnarray}\label{eqn:originalmetric}
-\hat{g}_{\mu\nu} dx^\mu dx^\nu = - f(r) dt^2 + \frac{1}{f(r)} dr^2 +r^2 d\chi^2 + r^2 \sin^2\chi d\Omega_{(2)}^2),
+\hat{g}_{\mu\nu} dx^\mu dx^\nu = - f(r) dt^2 + \frac{1}{f(r)} dr^2 +r^2 d\Omega_{(3)}^2,
 \end{eqnarray}
-where $d\Omega_{(2)}^2=d\theta^2 + \sin^2\theta d\phi^2$ is the metric of the two-sphere, and we have defined $f(r)=1+r^2/L^2$ for convenience. 
+where $d\Omega_{(3)}^2=r^2 \left( d\chi^2 + \sin^2\chi \left(d\theta^2 + \sin^2\theta d\phi^2\right) \right)$ is the metric of the three-sphere, and we have defined $f(r)=1+r^2/L^2$ for convenience. 
 Here, $L$ is the AdS radius of curvature, related to the cosmological constant in five dimensions by $\Lambda_5 = -(D-1)(D-2)/(2 L^2) = -6/L^2$. 
 It is useful to introduce a compactified radial coordinate $\rho$. We choose
 \begin{equation}\label{eqn:r_def}
@@ -87,12 +87,12 @@ r=\frac{2\rho}{1-\rho^2/\ell^2},
 where $\ell$ is an arbitrary compactification scale, independent of the AdS length scale $L$, such that the AdS boundary is reached when $\rho=\ell$. 
 In all of the following, we set $\ell=1$, though note that this scale is implicitly present since $\rho$ has dimensions of length. 
 The metric \eqref{eqn:originalmetric} in these compactified coordinates becomes\footnote{The Jacobian of the transformation is
-$\frac{\partial r}{\partial \rho} = \frac{2(1+\rho^2)}{1-\rho^2}^2$.
+$\frac{\partial r}{\partial \rho} = \frac{2(1+\rho^2)}{(1-\rho^2)^2}$.
 }
-\begin{eqnarray*}
+\begin{eqnarray}
 \hat{g}
-&=& \frac{1}{(1-\rho^2)^2} \left[ -\hat{f}(\rho) dt^2 + \frac{4(1+\rho^2)^2}{\hat{f}(\rho)} d\rho^2 + 4\rho^2 d\chi^2 + 4\rho^2 \sin^2\chi d\Omega_{(2)}^2) \right], 
-\end{eqnarray*}
+&=& \frac{1}{(1-\rho^2)^2} \left[ -\hat{f}(\rho) dt^2 + \frac{4(1+\rho^2)^2}{\hat{f}(\rho)} d\rho^2 + 4\rho^2 d\Omega_{(3)}^2) \right], 
+\end{eqnarray}
 where $\hat{f}(\rho) = (1-\rho^2)^2+4\rho^2$.
 
 We now introduce Cartesian coordinates $x=\rho\cos\chi$, $y=\rho\sin\chi$ in terms of which the compactified coordinates in the previous section are $\rho=\sqrt{x^2+y^2}$, $\chi=\arccos\left( x/\sqrt{x^2+y^2} \right)$.
@@ -110,11 +110,29 @@ g_{yy} &=& \frac{1}{\rho^2} \left( y^2 g_{\rho\rho} + \frac{x^2}{\rho^2} g_{\chi
 \end{eqnarray}
 
 Applying this transformation to the metric~\eqref{eqn:originalmetric} of pure AdS, one obtains
-\begin{eqnarray}\label{eqn:cartesianmetric_components}
+\begin{eqnarray}\label{eqn:ads_cartesianmetric_components}
 \hat{g}_{tt} &=& \frac{1}{(1-\rho^2)^2} \left[ -\hat{f}(\rho) \right] \nonumber \\
-\hat{g}_{xx} &=& \frac{1}{(1-\rho^2)^2} \frac{4}{\rho^2} \left[ \frac{(1+\rho^2)^2}{\hat{f}(\rho)} x^2 + y^2 \right] \nonumber \\
-\hat{g}_{xy} &=& \frac{1}{(1-\rho^2)^2} \frac{4xy}{\rho^2} \left[ \frac{(1+\rho^2)^2}{\hat{f}(\rho)} - 1 \right] \nonumber \\
-\hat{g}_{yy} &=& \frac{1}{(1-\rho^2)^2} \frac{4}{\rho^2} \left[ \frac{(1+\rho^2)^2}{\hat{f}(\rho)} y^2 + x^2 \right] \nonumber \\
+\hat{g}_{xx} &=& \frac{4}{\rho^2(1-\rho^2)^2} \left[ \frac{(1+\rho^2)^2}{\hat{f}(\rho)} x^2 + y^2 \right] \nonumber \\
+\hat{g}_{xy} &=& \frac{4xy}{\rho^2(1-\rho^2)^2} \left[ \frac{(1+\rho^2)^2}{\hat{f}(\rho)} - 1 \right] \nonumber \\
+\hat{g}_{yy} &=& \frac{4}{\rho^2(1-\rho^2)^2} \left[ \frac{(1+\rho^2)^2}{\hat{f}(\rho)} y^2 + x^2 \right] \nonumber \\
+\end{eqnarray}
+
+Using (8) in~\cite{Astefanesei:2003qy} which in five spacetime dimensions gives components $g_{tt}=-\left( 1+r^2/L^2-2m/r^2\right) e^{-2\delta}$, $g_{rr}=\left( 1+r^2/L^2-2m/r^2\right)^{-1}$, and $g_{\chi\chi}=r^2$.
+Transforming to a compactified radial coordinate, the metric components read $g_{tt}=-\left( \frac{\hat{f}(\rho)}{(1-\rho^2)^2} - \frac{(1-\rho^2)^2}{2\rho^2} m \right) e^{-2\delta}$, $g_{\rho\rho}=\frac{4(1+\rho^2)^2}{(1-\rho^2)^2} \frac{1}{\hat{f}(\rho) - \frac{(1-\rho^2)^2}{2\rho^2} m}$, and $g_{\chi\chi}=\frac{4\rho^2}{(1-\rho^2)^2}$.
+Using~\eqref{eqn:cartesianmetric_components}, we can now write down the form of (8) in~\cite{Astefanesei:2003qy} in Cartesian coordinates
+\begin{eqnarray}\label{eqn:full_cartesianmetric_components}
+g_{xx} &=& \frac{4}{\rho^2(1-\rho^2)^2} \left( x^2 \frac{(1+\rho^2)^2}{\hat{f}(\rho) - \frac{(1-\rho^2)^2}{2\rho^2} m} + y^2 \right) \nonumber \\
+g_{xy} &=& \frac{4xy}{\rho^2(1-\rho^2)^2} \left( \frac{(1+\rho^2)^2}{\hat{f}(\rho) - \frac{(1-\rho^2)^2}{2\rho^2} m} - 1 \right) \nonumber \\
+g_{yy} &=& \frac{4}{\rho^2(1-\rho^2)^2} \left( y^2 \frac{(1+\rho^2)^2}{\hat{f}(\rho) - \frac{(1-\rho^2)^2}{2\rho^2} m} + x^2 \right).
+\end{eqnarray}
+
+Finally, our evolved variables are $\bar{g}_{\mu\nu}$ defined in terms of the full metric $g_{\mu\nu}=\hat{g}_{\mu\nu}+(1-\rho^2)\bar{g}_{\mu\nu}$.
+We thus subtract~\eqref{eqn:ads_cartesianmetric_components} from~\eqref{eqn:full_cartesianmetric_components} and divide by $1-\rho^2$, to obtain
+\begin{eqnarray}\label{eqn:barred_cartesianmetric_components}
+\bar{g}_{tt} &=& \frac{\hat{f}(\rho)}{(1-\rho^2)^3} (1-e^{-2\delta}) + \frac{(1-\rho^2)}{2\rho^2} m e^{-2\delta} \nonumber \\
+\bar{g}_{xx} &=& \frac{4x^2}{\rho^2} \frac{m(1-\rho^2)}{\hat{f}(\rho) \left( 2\rho^2\hat{f}(\rho)-(1-\rho^2)^2m \right)} \nonumber \\
+\bar{g}_{xy} &=& \frac{4xy}{\rho^2} \frac{m(1-\rho^2)}{\hat{f}(\rho) \left( 2\rho^2\hat{f}(\rho)-(1-\rho^2)^2m \right)} \nonumber \\
+\bar{g}_{yy} &=& \frac{4y^2}{\rho^2} \frac{m(1-\rho^2)}{\hat{f}(\rho) \left( 2\rho^2\hat{f}(\rho)-(1-\rho^2)^2m \right)}.
 \end{eqnarray}
 
 %-------------------------------------------------------
