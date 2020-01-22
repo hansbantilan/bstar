@@ -73,6 +73,34 @@ The important take-away message: all numerical values of the cosmological consta
 We are free to fix the AdS length scale to be $L=1$, which is the scale with respect to which all other lengths are measured. 
 All numerical values of $\nu\equiv\Lambda/\mu^2$ then implies a mass parameter value $\mu^2=-(D-1)(D-2)/(2\nu)$ e.g. $\nu=-0.1$ in $D=5$ gives $\mu^2=60$.
 
+\PRLsection{Transformation to Cartesian Coordinates}
+The metric of global AdS$_5$ is
+\begin{eqnarray}\label{eqn:originalmetric}
+\hat{g}_{\mu\nu} dx^\mu dx^\nu = - f(r) dt^2 + \frac{1}{f(r)} dr^2 +r^2 d\chi^2 + r^2 \sin^2\chi d\Omega^2_2 \nonumber
+\end{eqnarray}
+where $d\Omega^2_2=d\theta^2 + \sin^2\theta d\phi^2$ is the metric of the two-sphere, and we have defined $f(r)=1+r^2/L^2$ for convenience. 
+Here, $L$ is the AdS radius of curvature, related to the cosmological constant in five dimensions by $\Lambda_5 = -(D-1)(D-2)/(2 L^2) = -6/L^2$. 
+It is useful to introduce a compactified radial coordinate $\rho$. We choose
+\begin{equation}\label{eqn:r_def}
+r=\frac{2\rho}{1-\rho^2/\ell^2},
+\end{equation}
+where $\ell$ is an arbitrary compactification scale, independent of the AdS length scale $L$, such that the AdS boundary is reached when $\rho=\ell$. 
+In all of the following, we set $\ell=1$, though note that this scale is implicitly present since $\rho$ has dimensions of length. 
+
+We now introduce Cartesian coordinates $x=\rho\cos\chi$, $y=\rho\sin\chi$ in terms of which the compactified coordinates in the previous section are $\rho=\sqrt{x^2+y^2}$, $\chi=\arccos\left( x/\sqrt{x^2+y^2} \right)$.
+The metric components in these Cartesian coordinates has the following form in terms of the metric components in polar coordinates\footnote{The elements of the Jacobian of the transformation are
+$\frac{\partial \rho}{\partial x} = \frac{x}{\rho}$,
+$\frac{\partial \rho}{\partial y} = \frac{y}{\rho}$,
+$\frac{\partial \chi}{\partial x} = -\frac{y}{\rho^2}$,
+$\frac{\partial \chi}{\partial y} = \frac{x}{\rho^2}$.
+}
+
+\begin{eqnarray}\label{eqn:cartesianmetric_components}
+g_{xx} &=& \frac{1}{\rho^2} \left( x^2 g_{\rho\rho} + \frac{y^2}{\rho^2} g_{\chi\chi} \right) \nonumber \\
+g_{xy} &=& \frac{xy}{\rho^2} \left( g_{\rho\rho} - \frac{1}{\rho^2} g_{\chi\chi} \right) \nonumber \\
+g_{yy} &=& \frac{1}{\rho^2} \left( y^2 g_{\rho\rho} + \frac{x^2}{\rho^2} g_{\chi\chi} \right).
+\end{eqnarray}
+
 %-------------------------------------------------------
 % Bibliography
 %-------------------------------------------------------
