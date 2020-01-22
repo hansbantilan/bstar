@@ -118,21 +118,21 @@ Applying this transformation to the metric~\eqref{eqn:originalmetric} of pure Ad
 \end{eqnarray}
 
 Using (8) in~\cite{Astefanesei:2003qy} which in five spacetime dimensions gives components $g_{tt}=-\left( 1+r^2/L^2-2m/r^2\right) e^{-2\delta}$, $g_{rr}=\left( 1+r^2/L^2-2m/r^2\right)^{-1}$, and $g_{\chi\chi}=r^2$.
-Transforming to a compactified radial coordinate, the metric components read $g_{tt}=-\left( \frac{\hat{f}(\rho)}{(1-\rho^2)^2} - \frac{(1-\rho^2)^2}{2\rho^2} m \right) e^{-2\delta}$, $g_{\rho\rho}=\frac{4(1+\rho^2)^2}{(1-\rho^2)^2} \frac{1}{\hat{f}(\rho) - \frac{(1-\rho^2)^2}{2\rho^2} m}$, and $g_{\chi\chi}=\frac{4\rho^2}{(1-\rho^2)^2}$.
+Transforming to a compactified radial coordinate, the metric components read $g_{tt}=-\left( \frac{\hat{f}(\rho)}{(1-\rho^2)^2} - \frac{(1-\rho^2)^2}{2\rho^2} m \right) e^{-2\delta}$, $g_{\rho\rho}=\frac{4(1+\rho^2)^2}{(1-\rho^2)^2} \frac{1}{\hat{f}(\rho) - \frac{(1-\rho^2)^4}{2\rho^2} m}$, and $g_{\chi\chi}=\frac{4\rho^2}{(1-\rho^2)^2}$.
 Using~\eqref{eqn:cartesianmetric_components}, we can now write down the form of (8) in~\cite{Astefanesei:2003qy} in Cartesian coordinates
 \begin{eqnarray}\label{eqn:full_cartesianmetric_components}
-g_{xx} &=& \frac{4}{\rho^2(1-\rho^2)^2} \left( x^2 \frac{(1+\rho^2)^2}{\hat{f}(\rho) - \frac{(1-\rho^2)^2}{2\rho^2} m} + y^2 \right) \nonumber \\
-g_{xy} &=& \frac{4xy}{\rho^2(1-\rho^2)^2} \left( \frac{(1+\rho^2)^2}{\hat{f}(\rho) - \frac{(1-\rho^2)^2}{2\rho^2} m} - 1 \right) \nonumber \\
-g_{yy} &=& \frac{4}{\rho^2(1-\rho^2)^2} \left( y^2 \frac{(1+\rho^2)^2}{\hat{f}(\rho) - \frac{(1-\rho^2)^2}{2\rho^2} m} + x^2 \right).
+g_{xx} &=& \frac{4}{\rho^2(1-\rho^2)^2} \left( x^2 \frac{(1+\rho^2)^2}{\hat{f}(\rho) - \frac{(1-\rho^2)^4}{2\rho^2} m} + y^2 \right) \nonumber \\
+g_{xy} &=& \frac{4xy}{\rho^2(1-\rho^2)^2} \left( \frac{(1+\rho^2)^2}{\hat{f}(\rho) - \frac{(1-\rho^2)^4}{2\rho^2} m} - 1 \right) \nonumber \\
+g_{yy} &=& \frac{4}{\rho^2(1-\rho^2)^2} \left( y^2 \frac{(1+\rho^2)^2}{\hat{f}(\rho) - \frac{(1-\rho^2)^4}{2\rho^2} m} + x^2 \right).
 \end{eqnarray}
 
 Finally, our evolved variables are $\bar{g}_{\mu\nu}$ defined in terms of the full metric $g_{\mu\nu}=\hat{g}_{\mu\nu}+(1-\rho^2)\bar{g}_{\mu\nu}$.
 We thus subtract~\eqref{eqn:ads_cartesianmetric_components} from~\eqref{eqn:full_cartesianmetric_components} and divide by $1-\rho^2$, to obtain
 \begin{eqnarray}\label{eqn:barred_cartesianmetric_components}
 \bar{g}_{tt} &=& \frac{\hat{f}(\rho)}{(1-\rho^2)^3} (1-e^{-2\delta}) + \frac{(1-\rho^2)}{2\rho^2} m e^{-2\delta} \nonumber \\
-\bar{g}_{xx} &=& \frac{4x^2}{\rho^2(1-\rho^2)} \frac{(1+\rho^2)^2 m}{\hat{f}(\rho) \left( 2\rho^2\hat{f}(\rho)-(1-\rho^2)^2m \right)} \nonumber \\
-\bar{g}_{xy} &=& \frac{4xy}{\rho^2(1-\rho^2)} \frac{(1+\rho^2)^2 m}{\hat{f}(\rho) \left( 2\rho^2\hat{f}(\rho)-(1-\rho^2)^2m \right)} \nonumber \\
-\bar{g}_{yy} &=& \frac{4y^2}{\rho^2(1-\rho^2)} \frac{(1+\rho^2)^2 m}{\hat{f}(\rho) \left( 2\rho^2\hat{f}(\rho)-(1-\rho^2)^2m \right)}.
+\bar{g}_{xx} &=& \frac{4x^2}{\rho^2} \frac{(1-\rho^2) (1+\rho^2)^2 m}{\hat{f}(\rho) \left( 2\rho^2\hat{f}(\rho)-(1-\rho^2)^4 m \right)} \nonumber \\
+\bar{g}_{xy} &=& \frac{4xy}{\rho^2} \frac{(1-\rho^2) (1+\rho^2)^2 m}{\hat{f}(\rho) \left( 2\rho^2\hat{f}(\rho)-(1-\rho^2)^4 m \right)} \nonumber \\
+\bar{g}_{yy} &=& \frac{4y^2}{\rho^2} \frac{(1-\rho^2) (1+\rho^2)^2 m}{\hat{f}(\rho) \left( 2\rho^2\hat{f}(\rho)-(1-\rho^2)^4 m \right)}.
 \end{eqnarray}
 
 %-------------------------------------------------------
