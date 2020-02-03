@@ -1,0 +1,194 @@
+import numpy as np
+import scipy.integrate as spi
+import scipy.optimize as opi
+import matplotlib 
+import os 
+import matplotlib.pyplot as plt
+import time
+
+class Complex_Boson_Star:
+
+    edelta_guess = None 
+    phi0         = None
+    Dim          = None
+    Lambda       = None
+
+    verbose      = None
+    path         = None
+
+    edelta_final   = None
+    solution_array = None 
+
+
+    finished_shooting = False 
+
+    def __init__(self,edelta_guess,phi0,Dim,Lambda,verbose = 0):
+
+        self.edelta_guess = edelta_guess
+        self.phi0         = phi0
+        self.Dim          = Dim
+        self.Lambda       = Lambda
+
+        # Will give more messages with increasing value
+        self.verbose = verbose
+
+        self.make_file()
+        return None
+   
+    def print_parameters():
+        print "The cosmological constant $\Lambda$ ", self.Lambda
+        print "The dimension of the problen     ", self.Dim
+        print "Central value of $\phi$ ", self.Lambda
+    
+
+    def eqns(self,y,r):
+        """ Differential equation for scalar fields from arXiv:gr-qc/0309131 
+
+        Parameters:
+            y (list with reals): current status vector ( a(r), alpha(r), phi(r), pi(r) ) 
+	    r (real) : current position 
+
+        Returns:
+            dydr (list with reals): derivative for y in r 
+
+        """
+        D = float(self.Dim)
+        Lambda = self.Lambda
+        edelta, m, phi, pi = y
+        # Where edelta  = e^{-\delta}
+
+        F  = ( 1 - 2*m /r**( D-3 ) - 2 * Lambda * r**2 / (( D - 2 )*( D - 1 )) )
+   
+   
+        dedeltadr = r*(edelta*pi**2.0 + edelta**(-1) *phi**2/F**2)
+        dmdr      = r**( D - 2 ) * 0.5 * ( F * pi**2 + phi**2 + edelta**(-2) * phi**2 / F) 
+        dphidr    = pi 
+    
+        dFdr      =  (-4*Lambda*r)/((-2 + D)*(-1 + D)) - 2*(3 - D)*r**(2 - D)*m - 2*r**(3 - D)*dmdr
+
+        dpidr     =  -(phi/(edelta**2*F**2)) + phi/F - (dedeltadr*pi)/edelta - (dFdr*pi)/F + (2*pi)/r - (D*pi)/r
+        dydr = [dedeltadr,dmdr,dphidr,dpidr]
+        
+        return dydr
+
+
+    def shoot(self,edelta_at_zero,r,output = False ):
+        """ Solves differential equation  
+
+        Parameters:
+            edelta_at_zero (real): The lapse value guess at r = rmin 
+            r       (real array) : Radial points used for solver
+            output  (bool)       : if True outputs whole solution array 
+
+        Returns:
+            phi_end (real):. The phi value at r = rmax    
+            or 
+            sol     (real array) : array containg solution
+
+        """
+    
+        # Define initial data vector 
+        y0 = [edelta_at_zero,0,self.phi0,0]
+        # Solve differential equaion 
+        sol = spi.odeint(self.eqns, y0, r)
+        phi_end = sol[-1,2]	
+
+        if output == False: 
+            return phi_end
+        else: 
+            return sol
+
+    def radial_walker(self,r_start,r_end,delta_R,N,eps): 
+        """ Performs shooting for multiple radii rmax shooting process.
+
+        Parameters:
+            r_start (real) : first rmax for which shooting is performed
+	    r_end (real) : maximum rmax for which shooting is performed
+	    delta_R (real) : stelpsize
+	    N (real) : number of gridpoints 
+
+        Returns:
+            alpha0 (real):. alpha0 for rmax   
+        """
+        range_list = np.arange(r_start,r_end,delta_R)
+        edelta_guess_tmp = self.edelta_guess
+
+        if self.verbose >= 1 :   print "Shooting started"
+        if self.verbose >= 1 :   start = time.time()
+
+        for R_max in range_list:
+            r = np.linspace(eps, R_max, N)
+
+            fun = lambda x: self.shoot(x,r)
+            root = opi.root(fun,edelta_guess_tmp)
+            edelta_guess_tmp = root.x 
+
+            if self.verbose >= 2 :   print "Edelta at R = eps ", edelta_guess_tmp[0] , " with Rmax ", R_max
+
+        if self.verbose >= 1 :   print "Shooting finished in ", time.time()-start, "sec" 
+    
+        self.finished_shooting = True  
+        output_solution = True
+        r = np.linspace(eps, r_end, N)
+        self.solution_array = self.shoot(edelta_guess_tmp,r,output_solution)
+
+        return edelta_guess_tmp[0]
+
+    def normalise_edelta(self,sol): 
+        """ Extractsomega for edelta by the coordinate transformation  t -> omega t 
+    
+        Parameters:
+            sol (real array) : were the sol[:,1] corresponds to edelta^(-1) and
+                           and asymtotic value that does not go to 1 
+        Returns:
+            omega (real): frequency of scalar field 
+            sol (real array) : sol array with fixed edelta
+        """
+
+        edelta = 1./sol[:,0]
+        N = len(edelta)
+        omega = edelta[N-1]
+        edelta = edelta/omega
+        sol[:,0] = 1./edelta
+        return omega , sol 
+
+    def make_file(self):
+        """ Creates Folder for current physics problem if they do not yet exist
+        """
+
+        name_Lambda_Dim = "Lambda"+str(self.Lambda)+"D"+str(self.Dim)
+        path = name_Lambda_Dim
+        if not os.path.exists(path):
+            os.mkdir(path)
+
+        name_phi = "phi"+str(self.phi0)
+        path = name_Lambda_Dim + "/"+name_phi
+        if not os.path.exists(path):
+            os.mkdir(path)
+            if self.verbose >= 1 :   print "Create Folder with relative " , path  
+        else :  
+            if self.verbose >= 1 :   print "Folder with path ", path , " already exists "  
+
+        self.path = path
+
+
+    def get_path(self):
+        """ return 
+              path (string): Realtive path used for outputs 
+        """ 
+        if self.path == None : 
+            make_file()
+        return self.path
+
+    def get_solution(self):
+        """return 
+             solution_array (real array) : solution array for Rmax 
+        """
+        if self.solution_array is None : 
+            print("----------------------------------------")
+            print("WARNING: SHOOTING HAS NOT BEEN PERFORMED")
+            print("----------------------------------------")
+            return None 
+        else:
+            return self.solution_array 
+
