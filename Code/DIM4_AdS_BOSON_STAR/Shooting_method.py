@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.integrate as spi
 import scipy.optimize as opi
+from scipy.interpolate import interp1d
 import matplotlib 
 import os 
 import matplotlib.pyplot as plt
@@ -18,7 +19,7 @@ class Complex_Boson_Star:
 
     edelta_final   = None
     solution_array = None 
-
+    solution_r_pos = None
 
     finished_shooting = False 
 
@@ -35,10 +36,12 @@ class Complex_Boson_Star:
         self.make_file()
         return None
    
-    def print_parameters():
+    def print_parameters(self):
+        print "----------------------------------------------------"
         print "The cosmological constant $\Lambda$ ", self.Lambda
-        print "The dimension of the problen     ", self.Dim
-        print "Central value of $\phi$ ", self.Lambda
+        print "The dimension of the problen        ", self.Dim
+        print "Central value of $\phi$             ", self.phi0
+        print "----------------------------------------------------"
     
 
     def eqns(self,y,r):
@@ -129,8 +132,8 @@ class Complex_Boson_Star:
     
         self.finished_shooting = True  
         output_solution = True
-        r = np.linspace(eps, r_end, N)
-        self.solution_array = self.shoot(edelta_guess_tmp,r,output_solution)
+        self.solution_r_pos = np.linspace(eps, r_end, N)
+        self.solution_array = self.shoot(edelta_guess_tmp[0],self.solution_r_pos,output_solution)
 
         return edelta_guess_tmp[0]
 
@@ -176,7 +179,7 @@ class Complex_Boson_Star:
         """ return 
               path (string): Realtive path used for outputs 
         """ 
-        if self.path == None : 
+        if self.path is None : 
             make_file()
         return self.path
 
@@ -184,11 +187,61 @@ class Complex_Boson_Star:
         """return 
              solution_array (real array) : solution array for Rmax 
         """
-        if self.solution_array is None : 
+        if self.solution_array is None or self.solution_r_pos is None : 
             print("----------------------------------------")
             print("WARNING: SHOOTING HAS NOT BEEN PERFORMED")
             print("----------------------------------------")
             return None 
         else:
-            return self.solution_array 
+            return self.solution_r_pos, self.solution_array 
 
+    def plot_solution(self):
+        """ Prints solution if shooting has been performed already
+
+        """
+        if self.path is None : 
+            make_file()
+        if self.solution_array is None or self.solution_r_pos is None : 
+            print("----------------------------------------")
+            print("WARNING: SHOOTING HAS NOT BEEN PERFORMED")
+            print("----------------------------------------")
+        else :
+
+            if self.verbose >= 1 :   print "Plotting started"
+            if self.verbose >= 1 :   start = time.time()
+            
+
+            phi = self.solution_array[:, 2]
+            m = self.solution_array[:,1]
+            edelta = 1/self.solution_array[:,0]
+            r = self.solution_r_pos 
+
+            # find 90 % radius of R 
+            Rguess = 0.01
+            maxphi = max(phi)
+            phi_tmp_fun = interp1d(r,phi-maxphi*0.1)
+            root = opi.root(phi_tmp_fun,Rguess)
+            R90 = root.x[0]
+
+            fig, (ax1, ax2, ax3) = plt.subplots(3,figsize=(10, 10))
+            ax1.plot(r, edelta, 'b', )
+            ax2.plot(r, m, 'g')
+            ax3.plot(r, phi, 'r')
+
+            ax3.set_xlabel('t')
+
+            ax1.set_ylabel('$ e^{\delta (t)}$')
+            ax2.set_ylabel('$ m (t)$')
+            ax3.set_ylabel('$\phi (t)$')
+
+            ax1.set_xlim([0,R90*2])
+            ax2.set_xlim([0,R90*2])
+            ax3.set_xlim([0,R90*2])
+
+            ax1.grid()
+            ax2.grid()
+            ax3.grid()
+
+            plt.savefig(self.path+"/overview.png") 
+
+            if self.verbose >= 1 :   print "Plotting finished in ", time.time()-start , " sec"
