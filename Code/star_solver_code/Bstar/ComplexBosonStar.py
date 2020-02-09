@@ -10,9 +10,9 @@ import time
 class Complex_Boson_Star:
 
     edelta_guess = None 
-    phi0         = None
-    Dim          = None
-    Lambda       = None
+    _phi0         = None
+    _Dim          = None
+    _Lambda       = None
 
     verbose      = None
     path         = None
@@ -26,9 +26,9 @@ class Complex_Boson_Star:
     def __init__(self,edelta_guess,phi0,Dim,Lambda,verbose = 0):
 
         self.edelta_guess = edelta_guess
-        self.phi0         = phi0
-        self.Dim          = Dim
-        self.Lambda       = Lambda
+        self._phi0         = phi0
+        self._Dim          = Dim
+        self._Lambda       = Lambda
 
         # Will give more messages with increasing value
         self.verbose = verbose
@@ -38,9 +38,9 @@ class Complex_Boson_Star:
    
     def print_parameters(self):
         print "----------------------------------------------------"
-        print "The cosmological constant $\Lambda$ ", self.Lambda
-        print "The dimension of the problen        ", self.Dim
-        print "Central value of $\phi$             ", self.phi0
+        print "The cosmological constant $\Lambda$ ", self._Lambda
+        print "The dimension of the problen        ", self._Dim
+        print "Central value of $\phi$             ", self._phi0
         print "----------------------------------------------------"
     
 
@@ -55,8 +55,8 @@ class Complex_Boson_Star:
             dydr (list with reals): derivative for y in r 
 
         """
-        D = float(self.Dim)
-        Lambda = self.Lambda
+        D = float(self._Dim)
+        Lambda = self._Lambda
         edelta, m, phi, pi = y
         # Where edelta  = e^{-\delta}
 
@@ -91,7 +91,7 @@ class Complex_Boson_Star:
         """
     
         # Define initial data vector 
-        y0 = [edelta_at_zero,0,self.phi0,0]
+        y0 = [edelta_at_zero,0,self._phi0,0]
         # Solve differential equaion 
         sol = spi.odeint(self.eqns, y0, r)
         phi_end = sol[-1,2]	
@@ -159,12 +159,12 @@ class Complex_Boson_Star:
         """ Creates Folder for current physics problem if they do not yet exist
         """
 
-        name_Lambda_Dim = "Lambda"+str(self.Lambda)+"D"+str(self.Dim)
+        name_Lambda_Dim = "Lambda"+str(self._Lambda)+"D"+str(self._Dim)
         path = name_Lambda_Dim
         if not os.path.exists(path):
             os.mkdir(path)
 
-        name_phi = "phi"+str(self.phi0)
+        name_phi = "phi"+str(self._phi0)
         path = name_Lambda_Dim + "/"+name_phi
         if not os.path.exists(path):
             os.mkdir(path)
