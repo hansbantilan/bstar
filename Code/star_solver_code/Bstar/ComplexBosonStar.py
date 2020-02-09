@@ -21,7 +21,7 @@ class Complex_Boson_Star:
     _solution_array = None 
     _solution_r_pos = None
 
-    finished_shooting = False 
+    _finished_shooting = False 
 
     def __init__(self,edelta_guess,phi0,Dim,Lambda,verbose = 0):
 
@@ -130,11 +130,12 @@ class Complex_Boson_Star:
 
         if self.verbose >= 1 :   print "Shooting finished in ", time.time()-start, "sec" 
     
-        self.finished_shooting = True  
+        self._finished_shooting = True  
         output_solution = True
         self._solution_r_pos = np.linspace(eps, r_end, N)
         self._solution_array = self.shoot(edelta_guess_tmp[0],self._solution_r_pos,output_solution)
-
+        self._edelta_final = edelta_guess_tmp
+        
         return edelta_guess_tmp[0]
 
     def normalise_edelta(self,sol): 

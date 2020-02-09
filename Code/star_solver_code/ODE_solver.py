@@ -5,7 +5,7 @@ import matplotlib
 matplotlib.use("agg")
 import os 
 import matplotlib.pyplot as plt
-from Shooting_method import * 
+from bstar.ComplexBosonStar import * 
 
 #=====================
 #  All imporntnat definitions 
