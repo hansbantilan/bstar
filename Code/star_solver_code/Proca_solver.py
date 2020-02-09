@@ -30,7 +30,7 @@ eps = 1e-10  # Small epsilon to avoid r \neq 0
 #   Main routine
 # ====================================
 
-pewpew = Complex_Proca_Star(sigma_guess, f0, Lambda,mu, verbose)
+pewpew = Complex_Proca_Star(sigma_guess, f0, Lambda, mu, verbose)
 
 pewpew.print_parameters()
 

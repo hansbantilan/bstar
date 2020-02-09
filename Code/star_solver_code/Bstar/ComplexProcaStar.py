@@ -20,13 +20,13 @@ class Complex_Proca_Star:
     path = None
 
     _sigma_final = None
-    _solution_array = None
-    _solution_r_pos = None
+    __solution_array = None
+    __solution_r_pos = None
 
     _finished_shooting = False
 
-    def __init__(self, sigma_guess, f0, Lambda ,mu = 1, verbose=0):
- 
+    def __init__(self, sigma_guess, f0, Lambda, mu=1, verbose=0):
+
         self.sigma_guess = sigma_guess
         self._f0 = f0
         self._Dim = 4
@@ -45,7 +45,7 @@ class Complex_Proca_Star:
         print "The dimension of the problen         ", self._Dim
         print r"Central value of f_0                ", self._f0
         print " Please cite https://arxiv.org/pdf/1609.01735.pdf "
-        print "             https://arxiv.org/pdf/1508.05395.pdf " 
+        print "             https://arxiv.org/pdf/1508.05395.pdf "
         print "----------------------------------------------------"
 
     def eqns(self, y, r):
@@ -66,20 +66,21 @@ class Complex_Proca_Star:
         # We defined pi = dfdx - g
         # Where sigma  = e^{-\delta}
 
-
         F = (1 - 2 * m / r**(D - 3) - 2 * Lambda * r**2 / ((D - 2) * (D - 1)))
 
-        g = -(pi/(F*mu**2*sigma**2))
+        g = -(pi / (F * mu**2 * sigma**2))
 
-        dsigmadr = r * mu **2 * (sigma * g**2.0 + sigma**(-1) * f**2 / F**2)
-        dmdr = r**(D - 2) * 0.5 *( pi**2/sigma + mu**2*( g**2 * F  + sigma**(-2) * f**2 / F))
+        dsigmadr = r * mu ** 2 * (sigma * g**2.0 + sigma**(-1) * f**2 / F**2)
+        dmdr = r**(D - 2) * 0.5 * (pi**2 / sigma + mu **
+                                   2 * (g**2 * F + sigma**(-2) * f**2 / F))
 
         dFdr = (-4 * Lambda * r) / ((-2 + D) * (-1 + D)) - 2 * \
             (3 - D) * r**(2 - D) * m - 2 * r**(3 - D) * dmdr
 
         dfdr = pi + g
 
-        dpidr = (dsigmadr*F*pi*r - 2*F*pi*sigma + f*mu**2*r*sigma)/(F*r*sigma)
+        dpidr = (dsigmadr * F * pi * r - 2 * F * pi * sigma +
+                 f * mu**2 * r * sigma) / (F * r * sigma)
 
         dydr = [dsigmadr, dmdr, dfdr, dpidr]
 
@@ -146,10 +147,10 @@ class Complex_Proca_Star:
 
         self._finished_shooting = True
         output_solution = True
-        self._solution_r_pos = np.linspace(eps, r_end, N)
-        self._solution_array = self.shoot(
+        self.__solution_r_pos = np.linspace(eps, r_end, N)
+        self.__solution_array = self.shoot(
             sigma_guess_tmp[0],
-            self._solution_r_pos,
+            self.__solution_r_pos,
             output_solution)
         self._sigma_final = sigma_guess_tmp
 
@@ -177,7 +178,8 @@ class Complex_Proca_Star:
         """ Creates Folder for current physics problem if they do not yet exist
         """
 
-        name_Lambda_Dim = "ProcaFieldLambda" + str(self._Lambda) + "D" + str(self._Dim)
+        name_Lambda_Dim = "ProcaFieldLambda" + \
+            str(self._Lambda) + "D" + str(self._Dim)
         path = name_Lambda_Dim
         if not os.path.exists(path):
             os.mkdir(path)
@@ -206,13 +208,13 @@ class Complex_Proca_Star:
         """return
              solution_array (real array) : solution array for Rmax
         """
-        if self._solution_array is None or self._solution_r_pos is None:
+        if self.__solution_array is None or self.__solution_r_pos is None:
             print("----------------------------------------")
             print("WARNING: SHOOTING HAS NOT BEEN PERFORMED")
             print("----------------------------------------")
             return None
         else:
-            return self._solution_r_pos, self._solution_array
+            return self.__solution_r_pos, self.__solution_array
 
     def plot_solution(self):
         """ Prints solution if shooting has been performed already
@@ -220,7 +222,7 @@ class Complex_Proca_Star:
         """
         if self.path is None:
             make_file()
-        if self._solution_array is None or self._solution_r_pos is None:
+        if self.__solution_array is None or self.__solution_r_pos is None:
             print("----------------------------------------")
             print("WARNING: SHOOTING HAS NOT BEEN PERFORMED")
             print("----------------------------------------")
@@ -231,10 +233,10 @@ class Complex_Proca_Star:
             if self.verbose >= 1:
                 start = time.time()
 
-            f = self._solution_array[:, 2]
-            m = self._solution_array[:, 1]
-            sigma =  self._solution_array[:, 0]
-            r = self._solution_r_pos
+            f = self.__solution_array[:, 2]
+            m = self.__solution_array[:, 1]
+            sigma = self.__solution_array[:, 0]
+            r = self.__solution_r_pos
 
             # find 90 % radius of R
             Rguess = 0.01

@@ -10,7 +10,7 @@ import time
 
 class Complex_Boson_Star:
 
-    edelta_guess = None
+    e_pow_minus_delta_guess = None
     _phi0 = None
     _Dim = None
     _Lambda = None
@@ -18,15 +18,15 @@ class Complex_Boson_Star:
     verbose = None
     path = None
 
-    _edelta_final = None
-    _solution_array = None
-    _solution_r_pos = None
+    _e_pow_minus_delta_final = None
+    __solution_array = None
+    __solution_r_pos = None
 
     _finished_shooting = False
 
-    def __init__(self, edelta_guess, phi0, Dim, Lambda, verbose=0):
+    def __init__(self, e_pow_minus_delta_guess, phi0, Dim, Lambda, verbose=0):
 
-        self.edelta_guess = edelta_guess
+        self.e_pow_minus_delta_guess = e_pow_minus_delta_guess
         self._phi0 = phi0
         self._Dim = Dim
         self._Lambda = Lambda
@@ -42,6 +42,7 @@ class Complex_Boson_Star:
         print r"The cosmological constant $\Lambda$ ", self._Lambda
         print "The dimension of the problen        ", self._Dim
         print r"Central value of $\phi$             ", self._phi0
+        print " Please cite https://arxiv.org/abs/gr-qc/0309131    "
         print "----------------------------------------------------"
 
     def eqns(self, y, r):
@@ -57,30 +58,31 @@ class Complex_Boson_Star:
         """
         D = float(self._Dim)
         Lambda = self._Lambda
-        edelta, m, phi, pi = y
-        # Where edelta  = e^{-\delta}
+        e_pow_minus_delta, m, phi, pi = y
+        # Where e_pow_minus_delta  = e^{-\delta}
 
         F = (1 - 2 * m / r**(D - 3) - 2 * Lambda * r**2 / ((D - 2) * (D - 1)))
 
-        dedeltadr = r * (edelta * pi**2.0 + edelta**(-1) * phi**2 / F**2)
+        de_pow_minus_deltadr = r * \
+            (e_pow_minus_delta * pi**2.0 + e_pow_minus_delta**(-1) * phi**2 / F**2)
         dmdr = r**(D - 2) * 0.5 * (F * pi**2 + phi **
-                                   2 + edelta**(-2) * phi**2 / F)
+                                   2 + e_pow_minus_delta**(-2) * phi**2 / F)
         dphidr = pi
 
         dFdr = (-4 * Lambda * r) / ((-2 + D) * (-1 + D)) - 2 * \
             (3 - D) * r**(2 - D) * m - 2 * r**(3 - D) * dmdr
 
-        dpidr = -(phi / (edelta**2 * F**2)) + phi / F - (dedeltadr * \
-                  pi) / edelta - (dFdr * pi) / F + (2 * pi) / r - (D * pi) / r
-        dydr = [dedeltadr, dmdr, dphidr, dpidr]
+        dpidr = -(phi / (e_pow_minus_delta**2 * F**2)) + phi / F - (de_pow_minus_deltadr * \
+                  pi) / e_pow_minus_delta - (dFdr * pi) / F + (2 * pi) / r - (D * pi) / r
+        dydr = [de_pow_minus_deltadr, dmdr, dphidr, dpidr]
 
         return dydr
 
-    def shoot(self, edelta_at_zero, r, output=False):
+    def shoot(self, e_pow_minus_delta_at_zero, r, output=False):
         """ Solves differential equation
 
         Parameters:
-            edelta_at_zero (real): The lapse value guess at r = rmin
+            e_pow_minus_delta_at_zero (real): The lapse value guess at r = rmin
             r       (real array) : Radial points used for solver
             output  (bool)       : if True outputs whole solution array
 
@@ -92,7 +94,7 @@ class Complex_Boson_Star:
         """
 
         # Define initial data vector
-        y0 = [edelta_at_zero, 0, self._phi0, 0]
+        y0 = [e_pow_minus_delta_at_zero, 0, self._phi0, 0]
         # Solve differential equaion
         sol = spi.odeint(self.eqns, y0, r)
         phi_end = sol[-1, 2]
@@ -115,7 +117,7 @@ class Complex_Boson_Star:
             alpha0 (real):. alpha0 for rmax
         """
         range_list = np.arange(r_start, r_end, delta_R)
-        edelta_guess_tmp = self.edelta_guess
+        e_pow_minus_delta_guess_tmp = self.e_pow_minus_delta_guess
 
         if self.verbose >= 1:
             print "Shooting started"
@@ -126,28 +128,28 @@ class Complex_Boson_Star:
             r = np.linspace(eps, R_max, N)
 
             def fun(x): return self.shoot(x, r)
-            root = opi.root(fun, edelta_guess_tmp)
-            edelta_guess_tmp = root.x
+            root = opi.root(fun, e_pow_minus_delta_guess_tmp)
+            e_pow_minus_delta_guess_tmp = root.x
 
             if self.verbose >= 2:
-                print "Edelta at R = eps ", edelta_guess_tmp[0], " with Rmax ", R_max
+                print "Edelta at R = eps ", e_pow_minus_delta_guess_tmp[0], " with Rmax ", R_max
 
         if self.verbose >= 1:
             print "Shooting finished in ", time.time() - start, "sec"
 
         self._finished_shooting = True
         output_solution = True
-        self._solution_r_pos = np.linspace(eps, r_end, N)
-        self._solution_array = self.shoot(
-            edelta_guess_tmp[0],
-            self._solution_r_pos,
+        self.__solution_r_pos = np.linspace(eps, r_end, N)
+        self.__solution_array = self.shoot(
+            e_pow_minus_delta_guess_tmp[0],
+            self.__solution_r_pos,
             output_solution)
-        self._edelta_final = edelta_guess_tmp
+        self._e_pow_minus_delta_final = e_pow_minus_delta_guess_tmp
 
-        return edelta_guess_tmp[0]
+        return e_pow_minus_delta_guess_tmp[0]
 
     def normalise_edelta(self, sol):
-        """ Extractsomega for edelta by the coordinate transformation  t -> omega t
+        """ Extractsomega for e_pow_delta by the coordinate transformation  t -> omega t
 
         Parameters:
             sol (real array) : were the sol[:,1] corresponds to edelta^(-1) and
@@ -157,11 +159,11 @@ class Complex_Boson_Star:
             sol (real array) : sol array with fixed edelta
         """
 
-        edelta = 1. / sol[:, 0]
-        N = len(edelta)
-        omega = edelta[N - 1]
-        edelta = edelta / omega
-        sol[:, 0] = 1. / edelta
+        e_pow_delta = 1. / sol[:, 0]
+        N = len(e_pow_delta)
+        omega = e_pow_delta[N - 1]
+        e_pow_delta = e_pow_delta / omega
+        sol[:, 0] = 1. / e_pow_delta
         return omega, sol
 
     def make_file(self):
@@ -197,13 +199,13 @@ class Complex_Boson_Star:
         """return
              solution_array (real array) : solution array for Rmax
         """
-        if self._solution_array is None or self._solution_r_pos is None:
+        if self.__solution_array is None or self.__solution_r_pos is None:
             print("----------------------------------------")
             print("WARNING: SHOOTING HAS NOT BEEN PERFORMED")
             print("----------------------------------------")
             return None
         else:
-            return self._solution_r_pos, self._solution_array
+            return self.__solution_r_pos, self.__solution_array
 
     def plot_solution(self):
         """ Prints solution if shooting has been performed already
@@ -211,7 +213,7 @@ class Complex_Boson_Star:
         """
         if self.path is None:
             make_file()
-        if self._solution_array is None or self._solution_r_pos is None:
+        if self.__solution_array is None or self.__solution_r_pos is None:
             print("----------------------------------------")
             print("WARNING: SHOOTING HAS NOT BEEN PERFORMED")
             print("----------------------------------------")
@@ -222,10 +224,10 @@ class Complex_Boson_Star:
             if self.verbose >= 1:
                 start = time.time()
 
-            phi = self._solution_array[:, 2]
-            m = self._solution_array[:, 1]
-            edelta = 1 / self._solution_array[:, 0]
-            r = self._solution_r_pos
+            phi = self.__solution_array[:, 2]
+            m = self.__solution_array[:, 1]
+            e_pow_delta = 1 / self.__solution_array[:, 0]
+            r = self.__solution_r_pos
 
             # find 90 % radius of R
             Rguess = 0.01
@@ -235,7 +237,7 @@ class Complex_Boson_Star:
             R90 = root.x[0]
 
             fig, (ax1, ax2, ax3) = plt.subplots(3, figsize=(10, 10))
-            ax1.plot(r, edelta, 'b', )
+            ax1.plot(r, e_pow_delta, 'b', )
             ax2.plot(r, m, 'g')
             ax3.plot(r, phi, 'r')
 

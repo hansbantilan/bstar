@@ -20,7 +20,7 @@ Rstart = 3
 Rend = 50.00
 deltaR = 1
 N = 100000
-edelta_guess = 0.4999
+e_pow_minus_delta_guess = 0.4999
 
 verbose = 1
 eps = 1e-10  # Small epsilon to avoid r \neq 0
@@ -29,7 +29,7 @@ eps = 1e-10  # Small epsilon to avoid r \neq 0
 #   Main routine
 # ====================================
 
-pewpew = Complex_Boson_Star(edelta_guess, phi0, D, Lambda, verbose)
+pewpew = Complex_Boson_Star(e_pow_minus_delta_guess, phi0, D, Lambda, verbose)
 
 pewpew.print_parameters()
 
