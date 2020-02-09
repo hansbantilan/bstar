@@ -11,7 +11,7 @@ import time
 class Complex_Proca_Star:
 
     sigma_guess = None
-    _phi0 = None
+    _f0 = None
     _Dim = None
     _Lambda = None
     _mu = None
@@ -25,10 +25,10 @@ class Complex_Proca_Star:
 
     _finished_shooting = False
 
-    def __init__(self, sigma_guess, phi0, Dim, Lambda ,mu = 1, verbose=0):
-
+    def __init__(self, sigma_guess, f0, Lambda ,mu = 1, verbose=0):
+ 
         self.sigma_guess = sigma_guess
-        self._phi0 = phi0
+        self._f0 = f0
         self._Dim = 4
         self._Lambda = Lambda
         self._mu = mu
@@ -42,16 +42,17 @@ class Complex_Proca_Star:
     def print_parameters(self):
         print "----------------------------------------------------"
         print r"The cosmological constant $\Lambda$ ", self._Lambda
-        print "The dimension of the problen        ", self._Dim
-        print r"Central value of $\phi$             ", self._phi0
-        print " Please cite https://arxiv.org/pdf/1609.01735.pdf https://arxiv.org/pdf/1508.05395.pdf " 
+        print "The dimension of the problen         ", self._Dim
+        print r"Central value of f_0                ", self._f0
+        print " Please cite https://arxiv.org/pdf/1609.01735.pdf "
+        print "             https://arxiv.org/pdf/1508.05395.pdf " 
         print "----------------------------------------------------"
 
     def eqns(self, y, r):
         """ Differential equation for scalar fields from arXiv:gr-qc/0309131
 
         Parameters:
-            y (list with reals): current status vector ( a(r), alpha(r), phi(r), pi(r) )
+            y (list with reals): current status vector ( a(r), alpha(r), f(r), pi(r) )
             r (real) : current position
 
         Returns:
@@ -65,9 +66,10 @@ class Complex_Proca_Star:
         # We defined pi = dfdx - g
         # Where sigma  = e^{-\delta}
 
-        g = -(pi/(F*mu**2*sigma**2))
 
         F = (1 - 2 * m / r**(D - 3) - 2 * Lambda * r**2 / ((D - 2) * (D - 1)))
+
+        g = -(pi/(F*mu**2*sigma**2))
 
         dsigmadr = r * mu **2 * (sigma * g**2.0 + sigma**(-1) * f**2 / F**2)
         dmdr = r**(D - 2) * 0.5 *( pi**2/sigma + mu**2*( g**2 * F  + sigma**(-2) * f**2 / F))
@@ -75,7 +77,7 @@ class Complex_Proca_Star:
         dFdr = (-4 * Lambda * r) / ((-2 + D) * (-1 + D)) - 2 * \
             (3 - D) * r**(2 - D) * m - 2 * r**(3 - D) * dmdr
 
-        dfdr = tmp + g
+        dfdr = pi + g
 
         dpidr = (dsigmadr*F*pi*r - 2*F*pi*sigma + f*mu**2*r*sigma)/(F*r*sigma)
 
@@ -92,20 +94,20 @@ class Complex_Proca_Star:
             output  (bool)       : if True outputs whole solution array
 
         Returns:
-            phi_end (real):. The phi value at r = rmax
+            f_end (real):. The f value at r = rmax
             or
             sol     (real array) : array containg solution
 
         """
 
         # Define initial data vector
-        y0 = [sigma_at_zero, 0, self._phi0, 0]
+        y0 = [sigma_at_zero, 0, self._f0, 0]
         # Solve differential equaion
         sol = spi.odeint(self.eqns, y0, r)
-        phi_end = sol[-1, 2]
+        f_end = sol[-1, 2]
 
         if not output:
-            return phi_end
+            return f_end
         else:
             return sol
 
@@ -175,13 +177,13 @@ class Complex_Proca_Star:
         """ Creates Folder for current physics problem if they do not yet exist
         """
 
-        name_Lambda_Dim = "Lambda" + str(self._Lambda) + "D" + str(self._Dim)
+        name_Lambda_Dim = "ProcaFieldLambda" + str(self._Lambda) + "D" + str(self._Dim)
         path = name_Lambda_Dim
         if not os.path.exists(path):
             os.mkdir(path)
 
-        name_phi = "phi" + str(self._phi0)
-        path = name_Lambda_Dim + "/" + name_phi
+        name_f = "f" + str(self._f0)
+        path = name_Lambda_Dim + "/" + name_f
         if not os.path.exists(path):
             os.mkdir(path)
             if self.verbose >= 1:
@@ -229,28 +231,28 @@ class Complex_Proca_Star:
             if self.verbose >= 1:
                 start = time.time()
 
-            phi = self._solution_array[:, 2]
+            f = self._solution_array[:, 2]
             m = self._solution_array[:, 1]
-            sigma = 1 / self._solution_array[:, 0]
+            sigma =  self._solution_array[:, 0]
             r = self._solution_r_pos
 
             # find 90 % radius of R
             Rguess = 0.01
-            maxphi = max(phi)
-            phi_tmp_fun = interp1d(r, phi - maxphi * 0.1)
-            root = opi.root(phi_tmp_fun, Rguess)
+            maxf = max(f)
+            f_tmp_fun = interp1d(r, f - maxf * 0.1)
+            root = opi.root(f_tmp_fun, Rguess)
             R90 = root.x[0]
 
             fig, (ax1, ax2, ax3) = plt.subplots(3, figsize=(10, 10))
             ax1.plot(r, sigma, 'b', )
             ax2.plot(r, m, 'g')
-            ax3.plot(r, phi, 'r')
+            ax3.plot(r, f, 'r')
 
             ax3.set_xlabel('t')
 
-            ax1.set_ylabel(r'$ e^{\delta (t)}$')
+            ax1.set_ylabel(r'$\sigma $')
             ax2.set_ylabel('$ m (t)$')
-            ax3.set_ylabel(r'$\phi (t)$')
+            ax3.set_ylabel(r'$f (t)$')
 
             ax1.set_xlim([0, R90 * 2])
             ax2.set_xlim([0, R90 * 2])
