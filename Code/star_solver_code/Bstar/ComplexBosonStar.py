@@ -17,15 +17,15 @@ class Complex_Boson_Star:
     verbose      = None
     path         = None
 
-    edelta_final   = None
-    solution_array = None 
-    solution_r_pos = None
+    _edelta_final  = None
+    _solution_array = None 
+    _solution_r_pos = None
 
     finished_shooting = False 
 
     def __init__(self,edelta_guess,phi0,Dim,Lambda,verbose = 0):
 
-        self.edelta_guess = edelta_guess
+        self.edelta_guess  = edelta_guess
         self._phi0         = phi0
         self._Dim          = Dim
         self._Lambda       = Lambda
@@ -132,8 +132,8 @@ class Complex_Boson_Star:
     
         self.finished_shooting = True  
         output_solution = True
-        self.solution_r_pos = np.linspace(eps, r_end, N)
-        self.solution_array = self.shoot(edelta_guess_tmp[0],self.solution_r_pos,output_solution)
+        self._solution_r_pos = np.linspace(eps, r_end, N)
+        self._solution_array = self.shoot(edelta_guess_tmp[0],self._solution_r_pos,output_solution)
 
         return edelta_guess_tmp[0]
 
@@ -187,13 +187,13 @@ class Complex_Boson_Star:
         """return 
              solution_array (real array) : solution array for Rmax 
         """
-        if self.solution_array is None or self.solution_r_pos is None : 
+        if self._solution_array is None or self._solution_r_pos is None : 
             print("----------------------------------------")
             print("WARNING: SHOOTING HAS NOT BEEN PERFORMED")
             print("----------------------------------------")
             return None 
         else:
-            return self.solution_r_pos, self.solution_array 
+            return self._solution_r_pos, self._solution_array 
 
     def plot_solution(self):
         """ Prints solution if shooting has been performed already
@@ -201,7 +201,7 @@ class Complex_Boson_Star:
         """
         if self.path is None : 
             make_file()
-        if self.solution_array is None or self.solution_r_pos is None : 
+        if self._solution_array is None or self._solution_r_pos is None : 
             print("----------------------------------------")
             print("WARNING: SHOOTING HAS NOT BEEN PERFORMED")
             print("----------------------------------------")
@@ -211,10 +211,10 @@ class Complex_Boson_Star:
             if self.verbose >= 1 :   start = time.time()
             
 
-            phi = self.solution_array[:, 2]
-            m = self.solution_array[:,1]
-            edelta = 1/self.solution_array[:,0]
-            r = self.solution_r_pos 
+            phi = self._solution_array[:, 2]
+            m = self._solution_array[:,1]
+            edelta = 1/self._solution_array[:,0]
+            r = self._solution_r_pos 
 
             # find 90 % radius of R 
             Rguess = 0.01
