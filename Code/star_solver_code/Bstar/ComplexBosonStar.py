@@ -19,6 +19,7 @@ class Complex_Boson_Star:
     path = None
 
     _e_pow_minus_delta_final = None
+    _omega = None
     __solution_array = None
     __solution_r_pos = None
 
@@ -148,7 +149,7 @@ class Complex_Boson_Star:
 
         return e_pow_minus_delta_guess_tmp[0]
 
-    def normalise_edelta(self, sol):
+    def normalise_edelta(self):
         """ Extractsomega for e_pow_delta by the coordinate transformation  t -> omega t
 
         Parameters:
@@ -158,13 +159,15 @@ class Complex_Boson_Star:
             omega (real): frequency of scalar field
             sol (real array) : sol array with fixed edelta
         """
-
-        e_pow_delta = 1. / sol[:, 0]
-        N = len(e_pow_delta)
-        omega = e_pow_delta[N - 1]
-        e_pow_delta = e_pow_delta / omega
-        sol[:, 0] = 1. / e_pow_delta
-        return omega, sol
+        if self._omega is None:
+            e_pow_delta = 1. / self.__solution_array[:, 0]
+            N = len(e_pow_delta)
+            omega = e_pow_delta[N - 1]
+            e_pow_delta = e_pow_delta / omega
+            self._omega = omega
+            self.__solution_array[:, 0] = 1. / e_pow_delta
+        else:
+            print " edelta has been already normalised "
 
     def make_file(self):
         """ Creates Folder for current physics problem if they do not yet exist
@@ -206,6 +209,33 @@ class Complex_Boson_Star:
             return None
         else:
             return self.__solution_r_pos, self.__solution_array
+
+    def print_solution(self):
+        """ Prints solution if shooting has been performed already
+
+        """
+        if self.path is None:
+            make_file()
+        if self.__solution_array is None or self.__solution_r_pos is None:
+            print("----------------------------------------")
+            print("WARNING: SHOOTING HAS NOT BEEN PERFORMED")
+            print("----------------------------------------")
+        else:
+            if self.path is None:
+                make_file()
+            phi = self.__solution_array[:, 2]
+            m = self.__solution_array[:, 1]
+            e_pow_delta = 1 / self.__solution_array[:, 0]
+            r = self.__solution_r_pos
+            if self._omega is None:
+                normalise_edelta()
+            omega = self._omega
+
+            np.savetxt(self.path + "/omega.dat", [omega])
+            np.savetxt(self.path + "/rvals.dat", r)
+            np.savetxt(self.path + "/edelta.dat", e_pow_delta)
+            np.savetxt(self.path + "/m.dat", m)
+            np.savetxt(self.path + "/phi.dat", phi)
 
     def plot_solution(self):
         """ Prints solution if shooting has been performed already

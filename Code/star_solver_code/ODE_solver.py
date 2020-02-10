@@ -41,15 +41,9 @@ alpha0 = pewpew.radial_walker(Rstart, Rend, deltaR, N, eps)
 # =====================================
 r, sol = pewpew.get_solution()
 
-omega, sol = pewpew.normalise_edelta(sol)
+pewpew.normalise_edelta()
 
 # ===============================
 path = pewpew.get_path()
 pewpew.plot_solution()
-
-plt.savefig(path + "/overview.png")
-np.savetxt(path + "/omega.dat", [omega]),
-np.savetxt(path + "/rvals.dat", r),
-np.savetxt(path + "/edelta.dat", 1 / sol[:, 0]),
-np.savetxt(path + "/m.dat", sol[:, 1]),
-np.savetxt(path + "/phi.dat", sol[:, 2]),
+pewpew.print_solution()
