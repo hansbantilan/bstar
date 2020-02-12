@@ -41,17 +41,10 @@ for Lambda in lambda_list:
 
 	e_pow_minus_delta_guess = pewpew.radial_walker(Rstart, Rend, deltaR, N, eps)
 
+	r, sol = pewpew.get_solution()
+	pewpew.normalise_edelta()
+	path = pewpew.get_path()
+	pewpew.plot_solution()
+	pewpew.print_solution()
+	
 	print "For next iteration, now using\n e_pow_minus_delta_guess=",e_pow_minus_delta_guess
-
-
-# =====================================
-#   Output and plotting
-# =====================================
-r, sol = pewpew.get_solution()
-
-pewpew.normalise_edelta()
-
-# ===============================
-path = pewpew.get_path()
-pewpew.plot_solution()
-pewpew.print_solution()
