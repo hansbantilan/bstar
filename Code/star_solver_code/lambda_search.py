@@ -13,20 +13,22 @@ import matplotlib
 # Physics defintions
 phi0 = 0.40         # centeral phi
 D = 5.0             # Dimension (total not only spacial)
-Lambda = -0.2       # Cosmological constant
 # Solver definitions
 Rstart = 3
 Rend = 50.00
 deltaR = 1
 N = 100000
-e_pow_minus_delta_guess = 0.4999
+#Lambda = -0.2       # Cosmological constant
+#e_pow_minus_delta_guess = 0.4999
+Lambda = -5.5       # Cosmological constant
+e_pow_minus_delta_guess = 0.1912
 
 verbose = 2
 eps = 1e-10  # Small epsilon to avoid r \neq 0
 
-Lstart =-0.2 #first cosmological constant Lambda
+Lstart =-5.6 #first cosmological constant Lambda
 Lend=-6.0    #target cosmological constant Lambda
-LN=59        #number of steps in Lambda
+LN=5         #number of steps in Lambda
 
 # ====================================
 #   Main routine
@@ -47,4 +49,4 @@ for Lambda in lambda_list:
 	pewpew.plot_solution()
 	pewpew.print_solution()
 	
-	print "For next iteration, now using\n e_pow_minus_delta_guess=",e_pow_minus_delta_guess
+	print "For next iteration, now using\n e_pow_minus_delta_guess=",e_pow_minus_delta_guess,"\n Rstart=",Rstart,"\n Rend=",Rend
